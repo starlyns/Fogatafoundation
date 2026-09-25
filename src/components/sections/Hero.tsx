@@ -3,7 +3,6 @@
 import { PerspectiveCamera } from "@react-three/drei";
 import { SceneView } from "@/components/three/SceneView";
 import { HeroGlobe } from "@/components/three/HeroGlobe";
-import { EmberField } from "@/components/three/EmberField";
 import { Button } from "@/components/ui/Button";
 import { SplitHeading } from "@/components/ui/SplitHeading";
 import { ANCHORS } from "@/lib/constants";
@@ -20,24 +19,13 @@ export function Hero() {
       {/* Radial darkening so text stays legible over the 3D layer. */}
       <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(10,10,11,0.2)_0%,rgba(10,10,11,0.85)_75%)]" />
 
-      {/* 3D layer: globe + drifting embers, with bloom on capable devices. */}
+      {/* 3D layer: a slow, dark globe. */}
       <SceneView className="z-[2]">
         <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={45} />
         <ambientLight intensity={0.4} />
         <directionalLight position={[5, 3, 5]} intensity={1.2} color="#FFA726" />
         <pointLight position={[-4, -2, 2]} intensity={2} color="#E03E00" />
-        <HeroGlobe
-          arcCount={device.tier === "low" ? 6 : 14}
-          pointCount={device.tier === "low" ? 120 : 260}
-        />
-        <EmberField
-          count={1600}
-          particleScale={device.particleScale}
-          area={[16, 20, 8]}
-          speed={1.3}
-          intensity={1}
-          pixelRatio={device.dpr[1]}
-        />
+        <HeroGlobe pointCount={device.tier === "low" ? 120 : 260} />
         {/* No EffectComposer here: post-processing hijacks the shared canvas
             that drei Views composite into, blanking the hero's 3D layer on
             desktop tiers. The emissive materials read as glowing without it. */}
